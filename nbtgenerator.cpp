@@ -13,10 +13,11 @@ unsigned long long gen(){
 	return (seed^=(seed<<2))^(seed<<14);
 }
 #define FML 95
-#define DML 308.25471555991675
-#define randChar ([](){seed^=rnd();char x=chr(rnd);if(x=='\'')x=33;return x;})()
-uniform_int_distribution<char>chr(34,126);
-uniform_int_distribution<char>chl(4,15);
+#define DML 235
+#define randChar ([](){seed^=rnd();char x=chr(rnd);if(x=='\''\
+)x=33;if(x=='\\')x=126;return x;})()
+uniform_int_distribution<char>chr(34,125);
+uniform_int_distribution<char>chl(6,15);
 uniform_real_distribution<double>expFloat(-FML,FML);
 uniform_real_distribution<double>expDouble(-DML,DML);
 #define sign ((rnd()%2)*2-1)
@@ -32,13 +33,13 @@ int len=chl(rnd);while(len--)cout<<c[rnd()%64];};
 auto gString=[](){cout<<"'";gStrBase();cout<<"'";};
 void gRand(int);
 auto gCompound=[](){cout<<'{';dep++;int len=chl(rnd);while(len--){
-gKey();cout<<':';gRand(rnd()%9);if(len!=0)cout<<',';}cout<<'}';};
-auto gList=[](){int tp=rnd()%9;cout<<'[';int len=chl(rnd);while(len--)
-{gRand(tp);if(len)cout<<',';}cout<<']';};
+gKey();cout<<':';gRand(rnd()%9);if(len!=0)cout<<',';}dep--;cout<<'}';};
+auto gList=[](){int tp=rnd()%7+1;cout<<'[';dep++;int len=chl(rnd);while(len--)
+{gRand(tp);if(len)cout<<',';}cout<<']';dep--;};
 void gRand(int type){
-	if(type==0)gList();
+	if(type==0)if(dep<=7)gList();else gRand(rnd()%7+1);
 	if(type==1)gInt();
-	if(type==8){if(dep<=5&&rnd()%3!=2)gCompound();else gRand(rnd()%8);};
+	if(type==8){if(dep<=7)gCompound();else gRand(rnd()%7+1);};
 	if(type==3)gFloat();
 	if(type==4)gShort();
 	if(type==2)gString();
